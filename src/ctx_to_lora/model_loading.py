@@ -103,6 +103,9 @@ def get_model(
     device="cuda",
     dtype=torch.bfloat16,
 ):
+    if device == "cuda" and not torch.cuda.is_available():
+        device = "cpu"
+        dtype = torch.float32
     model_init_kwargs = dict(
         pretrained_model_name_or_path=model_name_or_path,
         device_map=device,

@@ -397,7 +397,8 @@ class HyperLoRA(nn.Module):
         n_ctx_chunks: Integer[Tensor, "n_ctx"] | None = None,
     ):
         # [bs, n_layers, n_total_modules, r, feature_dim]
-        with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+        device_type = "cuda" if torch.cuda.is_available() else "cpu"
+        with torch.autocast(device_type=device_type, dtype=torch.bfloat16 if device_type == "cuda" else torch.float32):
             if self.aggregator.layer_to_layer and self.iterative_mode:
                 # iterative inference
                 # features: [bs num_layers seq_len feature_dim]
