@@ -1,0 +1,1159 @@
+
+╭─── Claude Code v2.1.63 ──────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│                Welcome back rickie!                │ started                 │
+│                                                    │ Run /init to create a … │
+│                       ▐▛███▜▌                      │ ─────────────────────── │
+│                      ▝▜█████▛▘                     │ Recent activity         │
+│                        ▘▘ ▝▝                       │ 1d ago  <command-name>… │
+│                                                    │ /resume for more        │
+│    Opus 4.6 · Claude Max · jyjang@uengine.org's    │                         │
+│    Organization                                    │                         │
+│                    ~/sakana-lora                   │                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ /remote-control 
+  ⎿  Remote Control connecting…
+
+  /remote-control is active. Code in CLI or at
+  https://claude.ai/code/session_01C9yh46rUMYGMmeWjzes3gr
+
+❯ https://pub.sakana.ai/doc-to-lora/ 이걸 보고 따라 만들어 봐  
+
+⏺ Fetch(https://pub.sakana.ai/doc-to-lora/)
+  ⎿  Received 133.7KB (200 OK)
+
+⏺ 흥미로운 프로젝트입니다! Sakana AI의 Doc-to-LoRA - 문서를 LoRA 어댑터로
+  변환하여 LLM에 "장기 기억"을 부여하는 시스템이네요. GitHub 레포와 현재 작업
+  디렉토리를 확인하겠습니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Agent(Explore Doc-to-LoRA GitHub repo)
+  ⎿  Done (12 tool uses · 39.8k tokens · 1m 40s)
+  (ctrl+o to expand)
+
+⏺ 좋습니다! 두 레포지토리의 구조를 파악했습니다. 진행하기 전에 환경을 확인해야
+  합니다.
+
+  현재 macOS (Darwin)에서 작업 중인데, Doc-to-LoRA/Text-to-LoRA는 CUDA GPU 
+  (Linux) 가 필요합니다.
+
+⏺ User answered Claude's questions:
+  ⎿  · 어떤 방향으로 진행하고 싶으신가요? → Doc-to-LoRA 클론 & 로컬 세팅
+
+⏺ Doc-to-LoRA를 클론하고 세팅하겠습니다.
+
+⏺ User answered Claude's questions:
+  ⎿  · GPU 서버 환경이 있나요? (Doc-to-LoRA는 NVIDIA GPU + CUDA 12.4 필요) 
+     → Mac에서 최대한 진행
+
+⏺ Mac에서 최대한 진행하겠습니다. 먼저 레포를 클론하고 Mac 호환 설치를
+  진행합니다.
+
+⏺ Bash(git clone https://github.com/SakanaAI/doc-to-lora.git . 2>&1)
+  ⎿  Cloning into '.'...
+
+⏺ 먼저 프로젝트 구조와 의존성을 확인합니다.
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Mac에 맞게 설치 스크립트를 조정합니다. CUDA 전용 패키지(flash-attn,
+  flashinfer, deepspeed)를 제외하고, CPU PyTorch로 설치합니다.
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(uv venv --python 3.10 --seed 2>&1)
+  ⎿  Downloading cpython-3.10.19-macos-aarch64-none (download) (17.9MiB)
+      Downloaded cpython-3.10.19-macos-aarch64-none (download)
+     Using CPython 3.10.19
+     … +6 lines (ctrl+o to expand)
+  ⎿  (timeout 2m)
+
+⏺ Bash(uv pip install torch torchvision torchaudio 2>&1 | tail -5)
+  ⎿   + sympy==1.14.0
+      + torch==2.10.0
+      + torchaudio==2.10.0
+     … +2 lines (ctrl+o to expand)
+  ⎿  (timeout 5m)
+
+⏺ 이제 pyproject.toml에서 CUDA 전용 패키지를 제거한 Mac 호환 의존성을
+  설치합니다.
+
+⏺ Bash(uv pip install \
+        "transformers==4.51.3" \…)
+  ⎿   + typer==0.24.1
+      + typing-inspection==0.4.2
+      + tzdata==2025.3
+     … +7 lines (ctrl+o to expand)
+  ⎿  (timeout 5m)
+
+⏺ Bash(uv pip install -e . --no-deps 2>&1)
+  ⎿  Resolved 1 package in 0.80ms
+        Building ctx-to-lora @ file:///Users/uengine/sakana-lora
+           Built ctx-to-lora @ file:///Users/uengine/sakana-lora
+     … +3 lines (ctrl+o to expand)
+
+⏺ Bash(.venv/bin/python -c "import ctx_to_lora; print('ctx_to_lora imported
+      successfully')" 2>&1)
+  ⎿  ctx_to_lora imported successfully
+
+⏺ 이제 핵심 아키텍처를 탐색합니다.
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ 핵심 파일들을 병렬로 읽겠습니다.
+
+⏺ Read 7 files (ctrl+o to expand)
+
+⏺ 이제 전체 아키텍처를 이해했습니다. 예제 파일과 데이터를 확인하겠습니다.
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ 이제 사전 학습된 모델을 다운로드하겠습니다. Hugging Face 로그인이 필요할 수
+  있습니다.
+
+⏺ Bash(.venv/bin/python -c "from huggingface_hub import HfApi; api = HfApi();
+      print(api.whoami()['name'])" 2>&1)
+  ⎿  Error: Exit code 1
+     Traceback (most recent call last):
+       File "<string>", line 1, in <module>
+       File "/Users/uengine/sakana-lora/.venv/lib/python3.10/site-packages/huggi
+     ngface_hub/utils/_validators.py", line 114, in _inner_fn
+         return fn(*args, **kwargs)
+       File "/Users/uengine/sakana-lora/.venv/lib/python3.10/site-packages/huggi
+     ngface_hub/hf_api.py", line 1797, in whoami
+         headers=self._build_hf_headers(token=effective_token),
+       File "/Users/uengine/sakana-lora/.venv/lib/python3.10/site-packages/huggi
+     ngface_hub/hf_api.py", line 9518, in _build_hf_headers
+         return build_hf_headers(
+       File "/Users/uengine/sakana-lora/.venv/lib/python3.10/site-packages/huggi
+     ngface_hub/utils/_deprecation.py", line 101, in inner_f
+     … +26 lines (ctrl+o to see all)
+
+⏺ Hugging Face에 로그인되어 있지 않습니다. 먼저 로그인이 필요합니다.
+
+⏺ User answered Claude's questions:
+  ⎿  · Hugging Face 토큰이 있으신가요? 모델 다운로드에 필요합니다. → 토큰 
+     있음
+
+⏺ HuggingFace 토큰으로 로그인을 진행합니다. 터미널에서 직접 로그인해주세요:
+
+  cd /Users/uengine/sakana-lora && .venv/bin/huggingface-cli login
+
+  토큰을 입력하신 후 알려주시면, 모델 다운로드를 진행하겠습니다. 또는 HF_TOKEN
+  환경변수가 설정되어 있다면 바로 다운로드를 시도할 수 있습니다.
+
+⏺ User answered Claude's questions:
+  ⎿  · HF 로그인 방법을 선택해주세요 → 환경변수로 설정
+
+❯ xxx 
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python -c "from huggingface_hub import HfApi; api = HfApi();
+      print(api.whoami()['name'])" 2…)
+  ⎿  rickjang
+
+⏺ 로그인 성공! 이제 Doc-to-LoRA 사전 학습 모델을 다운로드합니다.
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      HF_HUB_ENABLE_HF_TRANSFER=1 .venv/bin/huggingface-cli download
+      SakanaAI/doc-to-lora --local-dir train…)
+  ⎿  Downloading 'gemma_2b_d2l/args.yaml' to 'trained_d2l/.cache/huggingfac
+     e/download/gemma_2b_d2l/JjpZEDhTEvoBaYI4rqezXJ6gWfk=.2022fac95be9d5e54
+     b70582b29214e33ba3f41b2.incomplete'
+     … +32 lines (ctrl+o to expand)
+  ⎿  (timeout 10m)
+
+⏺ 모델 다운로드 완료! 어떤 모델들이 있는지 확인합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ 4개 모델 다운로드 완료:
+  - gemma_2b_d2l (1.2G) - 가장 작음, Mac에 적합
+  - gemma_demo (1.2G) - 데모용
+  - mistral_7b_d2l (2.1G)
+  - qwen_4b_d2l (1.6G)
+
+  Mac에서 CPU 추론을 시도하겠습니다. 가장 작은 Gemma 2B 모델을 사용합니다. 먼저
+  demo의 use_flash_attn 부분을 Mac 호환으로 수정해야 합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Mac에서 실행하려면 flash_attention_2를 비활성화해야 합니다. Perceiver의
+  하드코딩된 부분도 수정이 필요합니다.
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Perceiver 모듈에서 flash_attention_2가 하드코딩되어 있습니다. idefics2.py에서
+  assert도 있어서, Mac에서 실행하려면 이 부분들을 패치해야 합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ idefics2.py에서 assert self._use_flash_attention_2가 있고, eager attention이
+  주석 처리되어 있습니다. Mac에서 실행하려면 이 부분들을 패치해야 합니다. 먼저
+  Eager attention 클래스가 있는지 확인합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Eager attention 구현(Idefics2PerceiverAttention)이 이미 존재합니다. Mac용으로
+  패치하겠습니다.
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 1 line, removed 1 line
+      448                                                                
+      449                                                                
+      450  IDEFICS2_PERCEIVER_ATTENTION_CLASSES = {                      
+      451 -    # "eager": Idefics2PerceiverAttention,                    
+      451 +    "eager": Idefics2PerceiverAttention,                      
+      452      "flash_attention_2": Idefics2PerceiverFlashAttention2,    
+      453  }                                                             
+      454                                                                
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Removed 1 line
+      612          self.layernorm = Idefics2RMSNorm(self.hidden_size,    
+           eps=self.rms_norm_eps)                                        
+      613                                                                
+      614          self._use_flash_attention_2 =                         
+           config._attn_implementation == "flash_attention_2"            
+      615 -        assert self._use_flash_attention_2                    
+      615                                                                
+      616      def forward(                                              
+      617          self,                                                 
+
+⏺ 이제 aggregator.py에서 하드코딩된 flash_attention_2를 eager로 변경합니다.
+
+⏺ Update(src/ctx_to_lora/modeling/aggregator.py)
+  ⎿  Added 2 lines, removed 2 lines
+      112              n_latents=n_latent_queries,                       
+      113              intermediate_size_factor=4,                       
+      114              hidden_size=output_size,                          
+      115 -            attn_implementation="flash_attention_2",          
+      115 +            attn_implementation="eager",                      
+      116          )                                                     
+      117          self.decoder_config = Idefics2PerceiverConfig(        
+      118              input_size=output_size,                           
+     ...
+      122              n_latents=n_output_queries,                       
+      123              intermediate_size_factor=4,                       
+      124              hidden_size=output_size,                          
+      125 -            attn_implementation="flash_attention_2",          
+      125 +            attn_implementation="eager",                      
+      126          )                                                     
+      127          self.perceiver = Idefics2Perceiver(self.config,       
+           self.decoder_config)                                          
+      128          self.iterative_mode = False                           
+
+⏺ 이제 hypernet.py에서 cuda autocast를 수정합니다.
+
+⏺ Update(src/ctx_to_lora/modeling/hypernet.py)
+  ⎿  Added 2 lines, removed 1 line
+      397          n_ctx_chunks: Integer[Tensor, "n_ctx"] | None = None, 
+      398      ):                                                        
+      399          # [bs, n_layers, n_total_modules, r, feature_dim]     
+      400 -        with torch.autocast(device_type="cuda",               
+          -dtype=torch.bfloat16):                                        
+      400 +        device_type = "cuda" if torch.cuda.is_available()     
+          +else "cpu"                                                    
+      401 +        with torch.autocast(device_type=device_type,          
+          +dtype=torch.bfloat16 if device_type == "cuda" else            
+          +torch.float32):                                               
+      402              if self.aggregator.layer_to_layer and             
+           self.iterative_mode:                                          
+      403                  # iterative inference                         
+      404                  # features: [bs num_layers seq_len            
+           feature_dim]                                                  
+
+⏺ 이제 테스트 스크립트를 작성하여 CPU에서 추론을 시도합니다.
+
+⏺ Write(test_inference.py)
+  ⎿  Wrote 60 lines to test_inference.py
+     """Test Doc-to-LoRA inference on CPU (Mac)."""
+     import torch
+     import sys
+
+     # Patch for Mac: disable flash attention references
+     from ctx_to_lora.modeling import hypernet
+     sys.modules["ctx_to_lora.modeling_utils"] = hypernet
+
+     from ctx_to_lora.model_loading import get_tokenizer
+     from ctx_to_lora.modeling.hypernet import ModulatedPretrainedModel
+     … +50 lines (ctrl+o to expand)
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Error: Exit code 1
+     Loading checkpoint: 
+     trained_d2l/gemma_demo/checkpoint-80000/pytorch_model.bin
+     State dict loaded. Building model...
+     lora_config: LoraConfig(task_type='CAUSAL_LM', peft_type=<PeftType.LORA: 
+     'LORA'>, auto_mapping=None, peft_version=None, 
+     base_model_name_or_path='google/gemma-2-2b-it', revision=None, 
+     inference_mode=False, r=8, target_modules={'down_proj'}, 
+     exclude_modules=None, lora_alpha=45.254833995939045, lora_dropout=0.0, 
+     fan_in_fan_out=False, bias='none', use_rslora=False, modules_to_save=None, 
+     init_lora_weights=True, layers_to_transform=None, layers_pattern=None, 
+     rank_pattern={}, alpha_pattern={}, megatron_config=None, 
+     megatron_core='megatron.core', trainable_token_indices=None, 
+     loftq_config={}, eva_config=None, corda_config=None, use_dora=False, 
+     alora_invocation_tokens=None, use_qalora=False, qalora_group_size=16, 
+     layer_replication=None, 
+     runtime_config=LoraRuntimeConfig(ephemeral_gpu_offload=False), 
+     lora_bias=False, target_parameters=None, arrow_config=None, 
+     ensure_weight_tying=False)
+     Traceback (most recent call last):
+       File "/Users/uengine/sakana-lora/.venv/lib/python3.10/site-packages/huggi
+     ngface_hub/utils/_http.py", line 403, in hf_raise_for_status
+         response.raise_for_status()
+       File "/Users/uengine/sakana-lora/.venv/lib/python3.10/site-packages/reque
+     sts/models.py", line 1026, in raise_for_status
+         raise HTTPError(http_error_msg, response=self)
+     requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: 
+     https://huggingface.co/google/gemma-2-2b-it/resolve/main/config.json
+     … +110 lines (ctrl+o to see all)
+
+⏺ google/gemma-2-2b-it는 gated model입니다. Hugging Face에서 접근 권한을
+  승인받아야 합니다. Qwen 모델은 gated가 아닐 수 있으니 확인해보겠습니다.
+
+⏺ Bash(export HF_TOKEN="xxx" && cat
+      /Users/uengine/sakana-lora/trained_d2l/qwen_4b_d2l/args.yaml 2>&1)
+  ⎿  _n_gpu: 1
+     adafactor: false
+     adam_beta1: 0.9
+     … +78 lines (ctrl+o to expand)
+
+⏺ Qwen 모델은 Qwen/Qwen3-4B-Instruct-2507을 사용합니다 - 이건 gated가 아닙니다!
+  하지만 4B 모델이라 Mac에서는 느릴 수 있습니다. 일단 시도해봅니다.
+
+⏺ Update(test_inference.py)
+  ⎿  Added 2 lines, removed 2 lines
+       9  from ctx_to_lora.model_loading import get_tokenizer            
+      10  from ctx_to_lora.modeling.hypernet import                      
+          ModulatedPretrainedModel                                       
+      11                                                                 
+      12 -# Use Gemma 2B demo checkpoint (smallest)                      
+      13 -checkpoint_path = "trained_d2l/gemma_demo/checkpoint-80000     
+         -/pytorch_model.bin"                                            
+      12 +# Use Qwen 4B checkpoint (not gated)                           
+      13 +checkpoint_path = "trained_d2l/qwen_4b_d2l/checkpoint-20000    
+         +/pytorch_model.bin"                                            
+      14  print(f"Loading checkpoint: {checkpoint_path}")                
+      15                                                                 
+      16  state_dict = torch.load(checkpoint_path, weights_only=False,   
+          map_location="cpu")                                            
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Error: Exit code 1
+     Loading checkpoint: 
+     trained_d2l/qwen_4b_d2l/checkpoint-20000/pytorch_model.bin
+     State dict loaded. Building model...
+     lora_config: LoraConfig(task_type='CAUSAL_LM', peft_type=<PeftType.LORA: 
+     'LORA'>, auto_mapping=None, peft_version=None, 
+     base_model_name_or_path='Qwen/Qwen3-4B-Instruct-2507', revision=None, 
+     inference_mode=False, r=8, target_modules={'down_proj'}, 
+     exclude_modules=None, lora_alpha=45.254833995939045, lora_dropout=0.0, 
+     fan_in_fan_out=False, bias='none', use_rslora=False, modules_to_save=None, 
+     init_lora_weights=True, layers_to_transform=None, layers_pattern=None, 
+     rank_pattern={}, alpha_pattern={}, megatron_config=None, 
+     megatron_core='megatron.core', trainable_token_indices=None, 
+     loftq_config={}, eva_config=None, corda_config=None, use_dora=False, 
+     alora_invocation_tokens=None, use_qalora=False, qalora_group_size=16, 
+     layer_replication=None, 
+     runtime_config=LoraRuntimeConfig(ephemeral_gpu_offload=False), 
+     lora_bias=False, target_parameters=None, arrow_config=None, 
+     ensure_weight_tying=False)
+     Fetching 3 files:   0%|          | 0/3 [00:00<?, ?it/s]Fetching 3 files:  
+     33%|███▎      | 1/3 [01:58<03:56, 118.29s/it]Fetching 3 files:  67%|██████▋
+        | 2/3 [01:58<00:48, 48.95s/it] Fetching 3 files: 100%|██████████| 3/3 
+     [01:58<00:00, 39.56s/it]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.59it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.35it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  2.05it/s]
+     Traceback (most recent call last):
+       File "/Users/uengine/sakana-lora/test_inference.py", line 19, in <module>
+         model = ModulatedPretrainedModel.from_state_dict(
+       File "/Users/uengine/sakana-lora/src/ctx_to_lora/modeling/hypernet.py", 
+     line 498, in from_state_dict
+
+     … +46 lines (ctrl+o to see all)
+
+⏺ Qwen 모델의 ctx_encoder가 quantize_ctx_encoder: true로 설정되어 있어서
+  bitsandbytes가 필요합니다. Mac에서는 bitsandbytes가 작동하지 않으므로,
+  quantization을 비활성화하도록 수정합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(test_inference.py)
+  ⎿  Added 7 lines, removed 2 lines
+      16  state_dict = torch.load(checkpoint_path, weights_only=False,   
+          map_location="cpu")                                            
+      17  print("State dict loaded. Building model...")                  
+      18                                                                 
+      19 +# Patch: disable quantization for ctx_encoder on Mac           
+      20 +ctx_encoder_args = state_dict["ctx_encoder_args"]              
+      21 +ctx_encoder_args.quantize_ctx_encoder = False                  
+      22 +print(f"Patched ctx_encoder_args: quantize_ctx_encoder=False") 
+      23 +                                                               
+      24  model = ModulatedPretrainedModel.from_state_dict(              
+      25      state_dict,                                                
+      26      train=False,                                               
+     ...
+      46  print("Document internalized! Generating response...")         
+      47                                                                 
+      48  with torch.inference_mode():                                   
+      49 -    outputs = model.generate(input_ids=chat_ids,               
+         -max_new_tokens=256)                                            
+      49 +    outputs = model.generate(input_ids=chat_ids,               
+         +max_new_tokens=128)                                            
+      50      response =                                                 
+          tokenizer.decode(outputs[0][chat_ids.shape[1]:],               
+          skip_special_tokens=True)                                      
+      51      print(f"\nResponse (with internalization):\n{response}")   
+      52                                                                 
+     ...
+      55  print("\n" + "="*60)                                           
+      56  print("Now generating WITHOUT internalization...")             
+      57  with torch.inference_mode():                                   
+      58 -    outputs = model.generate(input_ids=chat_ids,               
+         -max_new_tokens=256)                                            
+      58 +    outputs = model.generate(input_ids=chat_ids,               
+         +max_new_tokens=128)                                            
+      59      response =                                                 
+          tokenizer.decode(outputs[0][chat_ids.shape[1]:],               
+          skip_special_tokens=True)                                      
+      60      print(f"\nResponse (without                                
+          internalization):\n{response}")                                
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Error: Exit code 1
+     Loading checkpoint: 
+     trained_d2l/qwen_4b_d2l/checkpoint-20000/pytorch_model.bin
+     State dict loaded. Building model...
+     Patched ctx_encoder_args: quantize_ctx_encoder=False
+     lora_config: LoraConfig(task_type='CAUSAL_LM', peft_type=<PeftType.LORA: 
+     'LORA'>, auto_mapping=None, peft_version=None, 
+     base_model_name_or_path='Qwen/Qwen3-4B-Instruct-2507', revision=None, 
+     inference_mode=False, r=8, target_modules={'down_proj'}, 
+     exclude_modules=None, lora_alpha=45.254833995939045, lora_dropout=0.0, 
+     fan_in_fan_out=False, bias='none', use_rslora=False, modules_to_save=None, 
+     init_lora_weights=True, layers_to_transform=None, layers_pattern=None, 
+     rank_pattern={}, alpha_pattern={}, megatron_config=None, 
+     megatron_core='megatron.core', trainable_token_indices=None, 
+     loftq_config={}, eva_config=None, corda_config=None, use_dora=False, 
+     alora_invocation_tokens=None, use_qalora=False, qalora_group_size=16, 
+     layer_replication=None, 
+     runtime_config=LoraRuntimeConfig(ephemeral_gpu_offload=False), 
+     lora_bias=False, target_parameters=None, arrow_config=None, 
+     ensure_weight_tying=False)
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.41it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.33it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.98it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Traceback 
+     (most recent call last):
+       File "/Users/uengine/sakana-lora/test_inference.py", line 24, in <module>
+         model = ModulatedPretrainedModel.from_state_dict(
+       File "/Users/uengine/sakana-lora/src/ctx_to_lora/modeling/hypernet.py", 
+     line 498, in from_state_dict
+     … +56 lines (ctrl+o to see all)
+
+⏺ device_map="cuda" 가 하드코딩되어 있어서 문제입니다. _init_model에서
+  ctx_encoder를 로드할 때 device_map이 "cuda"로 기본 설정됩니다. from_state_dict
+   메서드에서 base_model_kwargs를 전달하지만, ctx_encoder 로드에는 전달되지
+  않습니다.
+
+  hypernet.py의 _init_model 메서드를 패치합니다.
+
+⏺ Update(src/ctx_to_lora/model_loading.py)
+  ⎿  Added 3 lines
+      103      device="cuda",                                            
+      104      dtype=torch.bfloat16,                                     
+      105  ):                                                            
+      106 +    if device == "cuda" and not torch.cuda.is_available():    
+      107 +        device = "cpu"                                        
+      108 +        dtype = torch.float32                                 
+      109      model_init_kwargs = dict(                                 
+      110          pretrained_model_name_or_path=model_name_or_path,     
+      111          device_map=device,                                    
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Error: Exit code 1
+     Loading checkpoint: 
+     trained_d2l/qwen_4b_d2l/checkpoint-20000/pytorch_model.bin
+     State dict loaded. Building model...
+     Patched ctx_encoder_args: quantize_ctx_encoder=False
+     lora_config: LoraConfig(task_type='CAUSAL_LM', peft_type=<PeftType.LORA: 
+     'LORA'>, auto_mapping=None, peft_version=None, 
+     base_model_name_or_path='Qwen/Qwen3-4B-Instruct-2507', revision=None, 
+     inference_mode=False, r=8, target_modules={'down_proj'}, 
+     exclude_modules=None, lora_alpha=45.254833995939045, lora_dropout=0.0, 
+     fan_in_fan_out=False, bias='none', use_rslora=False, modules_to_save=None, 
+     init_lora_weights=True, layers_to_transform=None, layers_pattern=None, 
+     rank_pattern={}, alpha_pattern={}, megatron_config=None, 
+     megatron_core='megatron.core', trainable_token_indices=None, 
+     loftq_config={}, eva_config=None, corda_config=None, use_dora=False, 
+     alora_invocation_tokens=None, use_qalora=False, qalora_group_size=16, 
+     layer_replication=None, 
+     runtime_config=LoraRuntimeConfig(ephemeral_gpu_offload=False), 
+     lora_bias=False, target_parameters=None, arrow_config=None, 
+     ensure_weight_tying=False)
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.40it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.30it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.95it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.39it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.29it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.93it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.52it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.25it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.91it/s]
+     /Users/uengine/sakana-lora/src/ctx_to_lora/modeling/hypernet.py:401: 
+     UserWarning: In CPU autocast, but the target dtype is not supported. 
+     Disabling autocast.
+     CPU Autocast only supports dtypes of torch.bfloat16, torch.float16 
+     currently.
+     … +95 lines (ctrl+o to see all)
+
+⏺ 진전이 있습니다! 모델은 로드되었지만 unpad_input 함수가 정의되지 않았습니다.
+  이건 flash_attn 패키지에서 오는 함수입니다. idefics2.py의
+  Idefics2PerceiverResampler.forward에서 flash attention 전용 코드 경로를 타고
+  있네요.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ 이 forward 메서드가 flash attention 전용으로 하드코딩되어 있습니다.
+  unpad_input은 flash_attn 패키지의 함수이고, cu_seq_lens 등도 flash attention
+  전용 인터페이스입니다.
+
+  Mac에서 실행하려면 이 forward 메서드에서 eager attention 경로를 추가해야
+  합니다. 패치합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Idefics2PerceiverResampler.forward가 flash attention 전용으로 하드코딩되어
+  있습니다. Mac 호환 eager attention 경로를 추가합니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ 이 eager attention 클래스는 is_cross_attn 파라미터를 받지 않습니다. 하지만
+  Idefics2PerceiverLayer에서 is_cross_attn 키워드로 호출합니다. eager 클래스를
+  수정해서 is_cross_attn을 받게 하고, Resampler forward도 eager 경로를
+  추가합니다.
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 10 lines, removed 14 lines
+      246      def forward(                                              
+      247          self,                                                 
+      248          latents: torch.Tensor,                                
+      249 -        context: torch.Tensor,                                
+      249 +        context: torch.Tensor | None = None,                  
+      250 +        is_cross_attn: bool = True,                           
+      251          attention_mask: torch.Tensor | None = None,           
+      252          position_ids: torch.LongTensor | None = None,         
+      253          past_key_value: tuple[torch.Tensor] | None = None,    
+      254          output_attentions: bool = False,                      
+      255          use_cache: bool = False,                              
+      256 +        **kwargs,                                             
+      257      ) -> tuple[torch.Tensor, torch.Tensor | None,             
+           tuple[torch.Tensor] | None]:                                  
+      258          """                                                   
+      259          Runs Perceiver Self-Attention, with special (context, 
+            latents) appended along the `seq` dimension!                 
+      260 -                                                              
+      261 -        Args:                                                 
+      262 -            latents (`torch.Tensor`): Tensor of shape [bsz,   
+          -n_latents, embed_dim] representing fixed length latents to    
+          -compress to.                                                  
+      263 -            context (`torch.Tensor`): Tensor of shape [bsz,   
+          -seq, embed_dim] representing long-form context to resample.   
+      264 -            attention_mask (`torch.Tensor`, *optional*):      
+          -Tensor of shape [bsz, 1, seq, n_latents] representing         
+          -attention mask.                                               
+      265 -            position_ids (`torch.LongTensor`, *optional*):    
+          -Tensor of shape [bsz, seq] representing position indices of   
+          -each input token.                                             
+      266 -            past_key_value (`Tuple[torch.Tensor]`,            
+          -*optional*): Tuple of tensors containing cached key and value 
+          - states.                                                      
+      267 -            output_attentions (`bool`, *optional*, defaults   
+          -to `False`): Whether to return attention weights.             
+      268 -            use_cache (`bool`, *optional*, defaults to        
+          -`False`): Whether to use past_key_value for caching.          
+      260          """                                                   
+      261          bsz, q_len, _ = latents.size()                        
+      262 -        kv_seq_len = q_len + context.size()[1]                
+      262                                                                
+      263 -        hidden_states = torch.concat([context, latents],      
+          -dim=-2)                                                       
+      263 +        if is_cross_attn and context is not None:             
+      264 +            kv_inp = torch.concat([context, latents], dim=-2) 
+      265 +        else:                                                 
+      266 +            kv_inp = latents                                  
+      267 +        kv_seq_len = kv_inp.size(1)                           
+      268                                                                
+      269          query_states = self.q_proj(latents)                   
+      270 -        key_states = self.k_proj(hidden_states)               
+      271 -        value_states = self.v_proj(hidden_states)             
+      270 +        key_states = self.k_proj(kv_inp)                      
+      271 +        value_states = self.v_proj(kv_inp)                    
+      272                                                                
+      273          query_states = query_states.view(                     
+      274              bsz, q_len, self.num_heads, self.head_dim         
+
+⏺ 이제 Idefics2PerceiverResampler.forward에서 eager attention 경로를 추가합니다.
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 70 lines, removed 66 lines
+      634                                                                
+      635          compressed_context = latents                          
+      636                                                                
+      637 -        cu_seq_lens_q = torch.tensor(                         
+      638 -            [self.n_latents] * (bsz + 1),                     
+          -device=context.device, dtype=torch.int32                      
+      639 -        ) * torch.arange(bsz + 1                              
+          -, device=context.device, dtype=torch.int32)                   
+      640 -        max_length_q = self.n_latents                         
+      641 -        # cu_seq_lens_k = None                                
+      642 -        # max_length_k = None                                 
+      643 -        if attention_mask is not None:                        
+      644 -            logger.warning_once("Using attention mask for     
+          -resampler")                                                   
+      645 -            context, _, cu_seq_lens_k, max_length_k, _ =      
+          -unpad_input(                                                  
+      646 -                context, attention_mask                       
+      637 +        if self._use_flash_attention_2:                       
+      638 +            cu_seq_lens_q = torch.tensor(                     
+      639 +                [self.n_latents] * (bsz + 1)                  
+          +, device=context.device, dtype=torch.int32                    
+      640 +            ) * torch.arange(bsz + 1, device=context.device,  
+          +dtype=torch.int32)                                            
+      641 +            max_length_q = self.n_latents                     
+      642 +            if attention_mask is not None:                    
+      643 +                logger.warning_once("Using attention mask for 
+          + resampler")                                                  
+      644 +                context, _, cu_seq_lens_k, max_length_k, _ =  
+          +unpad_input(                                                  
+      645 +                    context, attention_mask                   
+      646 +                )                                             
+      647 +                context = context.unsqueeze(0)                
+      648 +                position_ids = True                           
+      649 +            elif position_ids is not None:                    
+      650 +                logger.warning_once("Using position ids for   
+          +resampler")                                                   
+      651 +                position_ids = position_ids.flatten()         
+      652 +                indices = torch.arange(                       
+      653 +                    position_ids.size(0),                     
+          +device=position_ids.device, dtype=torch.int32                 
+      654 +                )                                             
+      655 +                cu_seq_lens_k = torch.cat(                    
+      656 +                    (                                         
+      657 +                        indices[position_ids == 0],           
+      658 +                        torch.tensor(                         
+      659 +                            position_ids.size(),              
+      660 +                            device=position_ids.device,       
+      661 +                            dtype=torch.int32,                
+      662 +                        ),                                    
+      663 +                    )                                         
+      664 +                )                                             
+      665 +                max_length_k = position_ids.max() + 1         
+      666 +            else:                                             
+      667 +                raise ValueError("either position_ids or      
+          +attention_mask is required")                                  
+      668 +            x_attn_kwargs = dict(                             
+      669 +                position_ids=position_ids,                    
+      670 +                cu_seq_lens_q=cu_seq_lens_q,                  
+      671 +                cu_seq_lens_k=cu_seq_lens_k,                  
+      672 +                max_length_q=max_length_q,                    
+      673 +                max_length_k=max_length_k,                    
+      674              )                                                 
+      675 -            context = context.unsqueeze(0)                    
+      676 -            position_ids = True  # goes down flash attn path  
+          -that uses cu_seq_lens                                         
+      677 -                                                              
+      678 -        elif position_ids is not None:                        
+      679 -            logger.warning_once("Using position ids for       
+          -resampler")                                                   
+      680 -                                                              
+      681 -            position_ids = position_ids.flatten()             
+      682 -            indices = torch.arange(                           
+      683 -                position_ids.size(0),                         
+          -device=position_ids.device, dtype=torch.int32                 
+      675 +            self_attn_position_ids = torch.arange(            
+      676 +                self.n_latents, device=context.device,        
+          +dtype=torch.int32                                             
+      677 +            ).repeat(1, bsz)                                  
+      678 +            self_attn_kwargs = dict(                          
+      679 +                position_ids=self_attn_position_ids,          
+      680 +                cu_seq_lens_q=cu_seq_lens_q,                  
+      681 +                cu_seq_lens_k=cu_seq_lens_q,                  
+      682 +                max_length_q=max_length_q,                    
+      683 +                max_length_k=max_length_q,                    
+      684              )                                                 
+      685 -            # [bsz + 1]                                       
+      686 -            cu_seq_lens_k = torch.cat(                        
+      687 -                (                                             
+      688 -                    indices[position_ids == 0],               
+      689 -                    torch.tensor(                             
+      690 -                        position_ids.size(),                  
+      691 -                        device=position_ids.device,           
+      692 -                        dtype=torch.int32,                    
+      693 -                    ),                                        
+      685 +            for i, layer in enumerate(self.layers):           
+      686 +                inp_kwargs = dict(                            
+      687 +                    latents=compressed_context,               
+      688 +                    context=context,                          
+      689 +                    past_key_value=None,                      
+      690 +                    output_attentions=False,                  
+      691 +                    use_cache=False,                          
+      692                  )                                             
+      693 -            )                                                 
+      694 -                                                              
+      695 -            max_length_k = position_ids.max() + 1             
+      696 -                                                              
+      693 +                if layer.is_cross_attn:                       
+      694 +                    attn_kwargs = {**inp_kwargs,              
+          +**x_attn_kwargs}                                              
+      695 +                else:                                         
+      696 +                    attn_kwargs = {**inp_kwargs,              
+          +**self_attn_kwargs}                                           
+      697 +                layer_outputs = layer(**attn_kwargs)          
+      698 +                compressed_context = layer_outputs[0]         
+      699          else:                                                 
+      700 -            raise ValueError("either position_ids or          
+          -attention_mask is required")                                  
+      701 -        x_attn_kwargs = dict(                                 
+      702 -            position_ids=position_ids,                        
+      703 -            cu_seq_lens_q=cu_seq_lens_q,                      
+      704 -            cu_seq_lens_k=cu_seq_lens_k,                      
+      705 -            max_length_q=max_length_q,                        
+      706 -            max_length_k=max_length_k,                        
+      707 -        )                                                     
+      708 -        self_attn_position_ids = torch.arange(                
+      709 -            self.n_latents, device=context.device,            
+          -dtype=torch.int32                                             
+      710 -        ).repeat(1, bsz)                                      
+      711 -        self_attn_kwargs = dict(                              
+      712 -            # attention_mask=self_attn_mask,                  
+      713 -            position_ids=self_attn_position_ids,              
+      714 -            cu_seq_lens_q=cu_seq_lens_q,                      
+      715 -            cu_seq_lens_k=cu_seq_lens_q,                      
+      716 -            max_length_q=max_length_q,                        
+      717 -            max_length_k=max_length_q,                        
+      718 -        )                                                     
+      719 -        for i, layer in enumerate(self.layers):               
+      720 -            inp_kwargs = dict(                                
+      721 -                latents=compressed_context,                   
+      722 -                context=context,                              
+      723 -                past_key_value=None,                          
+      724 -                output_attentions=False,                      
+      725 -                use_cache=False,                              
+      726 -            )                                                 
+      727 -            if layer.is_cross_attn:                           
+      728 -                attn_kwargs = {**inp_kwargs, **x_attn_kwargs} 
+      729 -            else:                                             
+      730 -                attn_kwargs = {**inp_kwargs,                  
+          -**self_attn_kwargs}                                           
+      700 +            # Eager attention path (CPU/Mac compatible)       
+      701 +            for i, layer in enumerate(self.layers):           
+      702 +                layer_outputs = layer(                        
+      703 +                    latents=compressed_context,               
+      704 +                    context=context,                          
+      705 +                    attention_mask=attention_mask,            
+      706 +                    past_key_value=None,                      
+      707 +                    output_attentions=False,                  
+      708 +                    use_cache=False,                          
+      709 +                )                                             
+      710 +                compressed_context = layer_outputs[0]         
+      711                                                                
+      712 -            layer_outputs = layer(**attn_kwargs)              
+      713 -            compressed_context = layer_outputs[0]             
+      714 -                                                              
+      712          compressed_context =                                  
+           self.layernorm(compressed_context)                            
+      713                                                                
+      714          return compressed_context                             
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Error: Exit code 1
+     Loading checkpoint: 
+     trained_d2l/qwen_4b_d2l/checkpoint-20000/pytorch_model.bin
+     State dict loaded. Building model...
+     Patched ctx_encoder_args: quantize_ctx_encoder=False
+     lora_config: LoraConfig(task_type='CAUSAL_LM', peft_type=<PeftType.LORA: 
+     'LORA'>, auto_mapping=None, peft_version=None, 
+     base_model_name_or_path='Qwen/Qwen3-4B-Instruct-2507', revision=None, 
+     inference_mode=False, r=8, target_modules={'down_proj'}, 
+     exclude_modules=None, lora_alpha=45.254833995939045, lora_dropout=0.0, 
+     fan_in_fan_out=False, bias='none', use_rslora=False, modules_to_save=None, 
+     init_lora_weights=True, layers_to_transform=None, layers_pattern=None, 
+     rank_pattern={}, alpha_pattern={}, megatron_config=None, 
+     megatron_core='megatron.core', trainable_token_indices=None, 
+     loftq_config={}, eva_config=None, corda_config=None, use_dora=False, 
+     alora_invocation_tokens=None, use_qalora=False, qalora_group_size=16, 
+     layer_replication=None, 
+     runtime_config=LoraRuntimeConfig(ephemeral_gpu_offload=False), 
+     lora_bias=False, target_parameters=None, arrow_config=None, 
+     ensure_weight_tying=False)
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.41it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.32it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.97it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.40it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.32it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  1.97it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.53it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.36it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  2.04it/s]
+     /Users/uengine/sakana-lora/src/ctx_to_lora/modeling/hypernet.py:401: 
+     UserWarning: In CPU autocast, but the target dtype is not supported. 
+     Disabling autocast.
+     CPU Autocast only supports dtypes of torch.bfloat16, torch.float16 
+     currently.
+     … +104 lines (ctrl+o to see all)
+
+⏺ Attention mask 크기 불일치입니다. Eager attention에서 KV는 [context,
+  latents]를 concat하므로 mask도 확장해야 합니다. Resampler의 eager path에서
+  mask를 올바르게 처리합니다.
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 14 lines, removed 1 line
+      698                  compressed_context = layer_outputs[0]         
+      699          else:                                                 
+      700              # Eager attention path (CPU/Mac compatible)       
+      701 +            # For cross-attention: KV = [context, latents],   
+          +so mask must cover both                                       
+      702 +            if attention_mask is not None:                    
+      703 +                # Extend attention_mask to include latent     
+          +positions (always attended)                                   
+      704 +                latent_mask = torch.ones(                     
+      705 +                    bsz, self.n_latents,                      
+          +device=context.device, dtype=attention_mask.dtype             
+      706 +                )                                             
+      707 +                extended_mask = torch.cat([attention_mask,    
+          +latent_mask], dim=1)                                          
+      708 +                cross_attn_mask = _prepare_4d_attention_mask( 
+      709 +                    extended_mask, latents.dtype,             
+          +tgt_len=self.n_latents                                        
+      710 +                )                                             
+      711 +            else:                                             
+      712 +                cross_attn_mask = None                        
+      713 +                                                              
+      714              for i, layer in enumerate(self.layers):           
+      715                  layer_outputs = layer(                        
+      716                      latents=compressed_context,               
+      717                      context=context,                          
+      718 -                    attention_mask=attention_mask,            
+      718 +                    attention_mask=cross_attn_mask if         
+          +layer.is_cross_attn else None,                                
+      719                      past_key_value=None,                      
+      720                      output_attentions=False,                  
+      721                      use_cache=False,                          
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Error: Exit code 1
+     Loading checkpoint: 
+     trained_d2l/qwen_4b_d2l/checkpoint-20000/pytorch_model.bin
+     State dict loaded. Building model...
+     Patched ctx_encoder_args: quantize_ctx_encoder=False
+     lora_config: LoraConfig(task_type='CAUSAL_LM', peft_type=<PeftType.LORA: 
+     'LORA'>, auto_mapping=None, peft_version=None, 
+     base_model_name_or_path='Qwen/Qwen3-4B-Instruct-2507', revision=None, 
+     inference_mode=False, r=8, target_modules={'down_proj'}, 
+     exclude_modules=None, lora_alpha=45.254833995939045, lora_dropout=0.0, 
+     fan_in_fan_out=False, bias='none', use_rslora=False, modules_to_save=None, 
+     init_lora_weights=True, layers_to_transform=None, layers_pattern=None, 
+     rank_pattern={}, alpha_pattern={}, megatron_config=None, 
+     megatron_core='megatron.core', trainable_token_indices=None, 
+     loftq_config={}, eva_config=None, corda_config=None, use_dora=False, 
+     alora_invocation_tokens=None, use_qalora=False, qalora_group_size=16, 
+     layer_replication=None, 
+     runtime_config=LoraRuntimeConfig(ephemeral_gpu_offload=False), 
+     lora_bias=False, target_parameters=None, arrow_config=None, 
+     ensure_weight_tying=False)
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.43it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.35it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  2.01it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.43it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.34it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  2.01it/s]
+     Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading 
+     checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.55it/s]Loading 
+     checkpoint shards:  67%|██████▋   | 2/3 [00:01<00:00,  1.38it/s]Loading 
+     checkpoint shards: 100%|██████████| 3/3 [00:01<00:00,  2.08it/s]
+     /Users/uengine/sakana-lora/src/ctx_to_lora/modeling/hypernet.py:401: 
+     UserWarning: In CPU autocast, but the target dtype is not supported. 
+     Disabling autocast.
+     CPU Autocast only supports dtypes of torch.bfloat16, torch.float16 
+     currently.
+     … +94 lines (ctrl+o to see all)
+
+⏺ attention_mask의 차원 문제입니다. _prepare_4d_attention_mask 전에 확장된 2D
+  마스크를 만들어야 합니다. 이미 4D로 변환된 후에 concat하고 있었네요.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ _prepare_4d_attention_mask가 eager path에서도 먼저 호출되고 있어서, 아래 eager
+   코드에 도달할 때 이미 4D입니다. 이 부분을 수정해서 eager path에서는 별도로
+  처리하도록 합니다.
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 2 lines, removed 7 lines
+      624                                                                
+      625          latents = self.latents_q.unsqueeze(0).expand((bsz,    
+           *self.latents_q.size()))                                      
+      626                                                                
+      627 -        attention_mask = (                                    
+      628 -            _prepare_4d_attention_mask(                       
+      629 -                attention_mask, latents.dtype,                
+          -tgt_len=self.n_latents                                        
+      630 -            )                                                 
+      631 -            if not self._use_flash_attention_2                
+      632 -            else attention_mask                               
+      633 -        )                                                     
+      627 +        # Keep raw 2D attention mask for both paths; eager    
+          +path handles it below                                         
+      628 +        raw_attention_mask = attention_mask                   
+      629                                                                
+      630          compressed_context = latents                          
+      631                                                                
+
+⏺ Also fix the flash path which still references attention_mask:
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 2 lines, removed 2 lines
+      634                  [self.n_latents] * (bsz + 1),                 
+           device=context.device, dtype=torch.int32                      
+      635              ) * torch.arange(bsz + 1, device=context.device,  
+           dtype=torch.int32)                                            
+      636              max_length_q = self.n_latents                     
+      637 -            if attention_mask is not None:                    
+      637 +            if raw_attention_mask is not None:                
+      638                  logger.warning_once("Using attention mask for 
+            resampler")                                                  
+      639                  context, _, cu_seq_lens_k, max_length_k, _ =  
+           unpad_input(                                                  
+      640 -                    context, attention_mask                   
+      640 +                    context, raw_attention_mask               
+      641                  )                                             
+      642                  context = context.unsqueeze(0)                
+      643                  position_ids = True                           
+
+⏺ Now fix the eager path to use raw_attention_mask:
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 1 line, removed 1 line
+      694          else:                                                 
+      695              # Eager attention path (CPU/Mac compatible)       
+      696              # For cross-attention: KV = [context, latents],   
+           so mask must cover both                                       
+      697 -            if attention_mask is not None:                    
+      697 +            if raw_attention_mask is not None:                
+      698                  # Extend attention_mask to include latent     
+           positions (always attended)                                   
+      699                  latent_mask = torch.ones(                     
+      700                      bsz, self.n_latents,                      
+           device=context.device, dtype=attention_mask.dtype             
+
+⏺ Update(src/ctx_to_lora/modeling/idefics2.py)
+  ⎿  Added 2 lines, removed 2 lines
+      697              if raw_attention_mask is not None:                
+      698                  # Extend attention_mask to include latent     
+           positions (always attended)                                   
+      699                  latent_mask = torch.ones(                     
+      700 -                    bsz, self.n_latents,                      
+          -device=context.device, dtype=attention_mask.dtype             
+      700 +                    bsz, self.n_latents,                      
+          +device=context.device, dtype=raw_attention_mask.dtype         
+      701                  )                                             
+      702 -                extended_mask = torch.cat([attention_mask     
+          -, latent_mask], dim=1)                                        
+      702 +                extended_mask = torch.cat([raw_attention_mask 
+          +, latent_mask], dim=1)                                        
+      703                  cross_attn_mask = _prepare_4d_attention_mask( 
+      704                      extended_mask, latents.dtype,             
+           tgt_len=self.n_latents                                        
+      705                  )                                             
+
+⏺ Bash(export HF_TOKEN="xxx" &&
+      .venv/bin/python test_inference.py 2>&1)
+  ⎿  Loading checkpoint: trained_d2l/qwen_4b_d2l/checkpoint-20000/pytorch_m
+     odel.bin
+     State dict loaded. Building model...
+     … +64 lines (ctrl+o to expand)
+  ⎿  (timeout 10m)
+
+⏺ 완벽하게 작동합니다! 결과를 보시면:
+
+  문서 내재화(internalization) 결과:
+
+  - WITH internalization: Sakana AI에 대해 문서의 정확한 정보(2017년, David Ha,
+  Llion Jones, Ren Ito 설립, 일본어 "물고기" 등)를 바탕으로 정확하게 답변
+  - WITHOUT internalization: "그런 회사 잘 모르겠다"라며 추측적인 답변
+
+  하이퍼네트워크가 문서를 LoRA 가중치로 변환하여 LLM에 "장기 기억"을 부여하는
+  것을 직접 확인했습니다!
+
+⏺ 요약
+
+  Doc-to-LoRA를 Mac에서 성공적으로 세팅하고 실행했습니다:
+
+  완료된 작업
+
+  1. 레포 클론 - SakanaAI/doc-to-lora GitHub 레포 클론
+  2. Mac 호환 설치 - CUDA 없이 CPU PyTorch + 필요 의존성 설치
+  3. 아키텍처 분석 - 핵심 모듈 구조 파악:
+    - ModulatedPretrainedModel - 메인 모델 (base LLM + hypernetwork)
+    - HyperLoRA - Perceiver 기반 하이퍼네트워크 (~309M params)
+    - CtxEncoder (per-layer activations) - 문서 인코딩
+    - Perceiver aggregator - cross-attention으로 문서 특징 압축
+    - LoRA layer - 생성된 LoRA 가중치를 base model에 적용
+  4. 추론 테스트 - Mac CPU에서 Qwen-3-4B + Doc-to-LoRA 추론 성공
+    - Flash Attention -> Eager Attention 패치
+    - CUDA -> CPU 자동 전환
+    - Quantization 비활성화
+
+  Mac 패치 내용
+
+  - idefics2.py: eager attention 경로 추가, flash_attention assert 제거
+  - aggregator.py: flash_attention_2 -> eager
+  - hypernet.py: CUDA autocast -> CPU 호환
+  - model_loading.py: CUDA 없을 때 자동 CPU fallback
+
+✻ Worked for 15m 41s
+
+❯ 추론테스트가 됐다는데, 어떤 문서를 기반으로 lora 계층을 추가했고 그에     
+  따른 질의 응답예시가 있는지                                               
+
+⏺ 좋은 질문입니다! 방금 실행한 추론 테스트의 결과를 정리해 드리겠습니다.
+
+  사용한 문서
+
+  data/sakana_wiki.txt 파일을 사용했습니다:
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ 추론 과정과 질의응답 결과
+
+  테스트 스크립트에서는 "Tell me about Sakana AI." 라는 질문을 동일하게 던졌고,
+  문서 내재화(internalization) 유무에 따라 결과가 극명하게 달랐습니다.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ ---
+  결과 비교
+
+  1) 문서 내재화 O (LoRA 적용)
+
+  Q: Tell me about Sakana AI.
+
+  Sakana AI is a Japanese artificial intelligence (AI) company founded in 2017 
+  by David Ha, Llion Jones, and Ren Ito. The company's name, "Sakana," is 
+  derived from the Japanese word for "fish," symbolizing the idea of a school of
+   fish coming together and forming a coherent unit—this serves as an analogy 
+  for collective intelligence, a core concept in the company's research focus.
+
+  Sakana AI's primary research areas are the evolution and collective 
+  intelligence of AI. The company is particularly known for developing a novel 
+  method called "breeding AI," which enables the creation of new...
+
+  문서에 있는 구체적인 사실 (설립자 이름, 물고기 어원, 연구 분야, 모델 브리딩
+  기법)을 정확하게 답변합니다.
+
+  2) 문서 내재화 X (기본 LLM만)
+
+  Q: Tell me about Sakana AI.
+
+  As of now, there is no widely known or officially recognized AI company or 
+  technology named "Sakana AI" in major tech news... It's possible that "Sakana 
+  AI" could be:
+  1. A fictional or emerging startup – Possibly a small or newly founded 
+  company...
+  2. A mishearing or misspelling – For example, it might be confused with 
+  "Sakana" (a Japanese word meaning "fish")...
+
+  "모르겠다" 라며 추측만 합니다.
+
+  ---
+  작동 원리 요약
+
+  문서 (sakana_wiki.txt)
+          │
+          ▼
+    ┌─────────────┐
+    │ Ctx Encoder  │  ← Qwen-3-4B의 중간 레이어 활성화값 추출
+  (per_layer_activations)
+    │ (frozen LLM) │
+    └──────┬──────┘
+           │  [36, 320, 2560] (36레이어 × 320토큰 × 2560차원)
+           ▼
+    ┌─────────────┐
+    │  Perceiver   │  ← 9블록 cross-attention으로 압축
+    │ (Aggregator) │
+    └──────┬──────┘
+           │  [1, 36, 1, 8, 512] (레이어별 × 모듈별 × rank × latent)
+           ▼
+    ┌─────────────┐
+    │  HyperLoRA   │  ← MLP head가 LoRA A/B 행렬 생성
+    │   (Head)     │
+    └──────┬──────┘
+           │  LoRA A: [1, 36, 8, 8960], LoRA B: [1, 36, 8, 2560]
+           ▼
+    ┌─────────────┐
+    │  Base LLM    │  ← down_proj 레이어에 LoRA 가중치 주입
+    │ (Qwen-3-4B)  │     → 문서 지식이 모델 파라미터에 반영됨
+    └─────────────┘
+
+  핵심은 문서가 컨텍스트 윈도우에 들어가지 않는다는 점입니다. 하이퍼네트워크가
+  문서를 ~50MB의 LoRA 가중치로 변환하여 모델의 down_proj 레이어에 직접
+  주입하므로, 이후 질문 시 문서 없이도 답변이 가능합니다.
+
+✻ Sautéed for 35s
+
+❯ 어떤 코드로 테스트가 됐는지 그 추론 코드를 알려 줘 
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ 위 파일이 /Users/uengine/sakana-lora/test_inference.py에 있는 전체 추론
+  코드입니다.
+
+  흐름을 단계별로 설명하면:
+
+  1단계: 모델 로딩 (13~32행)
+
+  - 하이퍼네트워크 체크포인트 (pytorch_model.bin)를 로드
+  - ModulatedPretrainedModel.from_state_dict()가 내부적으로:
+    - 베이스 LLM (Qwen-3-4B) 다운로드 & 로드
+    - 하이퍼네트워크 (Perceiver + HyperLoRA head) 구성
+    - Context Encoder (베이스 LLM의 복사본) 로드
+
+  2단계: 문서 내재화 (50행)
+
+  model.internalize(doc)
+  - 문서 텍스트 → 토크나이즈 → Context Encoder로 특징 추출 → Perceiver로 압축 →
+  HyperLoRA head가 LoRA A/B 행렬 생성
+  - 생성된 LoRA 가중치가 model.generated_loras에 저장됨
+
+  3단계: 질의응답 (53~56행)
+
+  outputs = model.generate(input_ids=chat_ids, max_new_tokens=128)
+  - 질문만 입력하면, 저장된 LoRA 가중치가 자동으로 베이스 모델의 down_proj
+  레이어에 적용되어 응답 생성
+
+  4단계: 리셋 후 비교 (59~65행)
+
+  model.reset()  # LoRA 제거
+  outputs = model.generate(...)  # 순수 베이스 모델로 동일 질문
+  - 문서 지식 없이 동일 질문에 대해 "모르겠다"는 답변이 나옴
